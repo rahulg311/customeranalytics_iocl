@@ -85,6 +85,8 @@ const data = await res.json();   // 🔥 IMPORTANT
 // console.log("login response data", data)
 
     if (data[0].auth_status == true) {
+          toast.success("Login Successful")
+        
       console.log("loginauth1",data);
     const response =  await props.sessionContext.post({ 
       url:url.adminLogin,
@@ -99,21 +101,30 @@ const data = await res.json();   // 🔥 IMPORTANT
         ...state,
         logininPlantData: response,
       }));  
-        usenavigate("/dashboard", {
+    
+        setTimeout(()=>{
+ usenavigate("/dashboard", {
            // state: propData,
         });
+          },1000)
+       
 
         // login success ke baad
 sessionStorage.setItem("token", response.token);
 // ya
 localStorage.setItem("token", response.token);
+
     }
         else {
+          
           toast.error(response.strmessage)
           return
         }    
-      } 
+      } else{
+         toast.error("Incorrect username or password")
+      }
   } catch (error) {
+
     console.error("Error:", error);
   }
 };
@@ -121,7 +132,7 @@ localStorage.setItem("token", response.token);
 
   return (
      <div className="min-h-screen w-full bg-slate-900 text-white relative">
-        <ToastContainer></ToastContainer>
+        <ToastContainer/>
       {/* Background Image - Using modern Next.js Image props */}
       {/* <img
         src={Propel} // Make sure this image is in your /public folder
@@ -133,6 +144,7 @@ localStorage.setItem("token", response.token);
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/80 to-indigo-900/70 z-10" />
 
       <div className="relative z-20 min-h-screen grid grid-cols-1 lg:grid-cols-2">
+        
         {/* Left Side: Branding */}
         <div className="hidden lg:flex flex-col items-center justify-center p-12 bg-black/10">
             <motion.div

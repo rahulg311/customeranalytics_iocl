@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { TrendingUp, Target, BarChart3, Calendar, ChevronDown, LogOut, Layers, X, Mail, Upload, FileSpreadsheet, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import * as XLSX from "xlsx"
+import { RingLoader } from "react-spinners";
 
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -22,6 +23,7 @@ import OverallSectorReportTable from './OverallSectorReportTable'
 
 function Targetsales(props) {
 
+    
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedExcelData, setUploadedExcelData] = useState([]);
     const [excelHeaders, setExcelHeaders] = useState([]);
@@ -175,14 +177,16 @@ function Targetsales(props) {
         sectorsDetail: null,
         sectorGroups: null
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [isSending, setIsSending] = useState(false); // State for email button
     useEffect(() => {
+     
         setmonthyear(`${selectedMonth}-${selectedYear}`)
         TargetSalesMonthYearWise(activeTab, getmonthyear);
         TotalTargetSalesMonthYearWiseZone(activeTab, getmonthyear);
         SectorReport(getmonthyear)
+        
 
     }, []);
 
@@ -280,7 +284,7 @@ function Targetsales(props) {
         setInvalidValueRows(new Set());
         setActiveTab('overview');
     };
-
+// no use api
     const handleSubmitExcelData = async () => {
         if (uploadedExcelData.length === 0) {
             toast.error('No data to submit');
@@ -343,6 +347,7 @@ function Targetsales(props) {
 
 
     const loadSalesData = async () => {
+      
         setmonthyear(`${selectedMonth}-${selectedYear}`)
         TargetSalesMonthYearWise(activeTab, getmonthyear);
         TotalTargetSalesMonthYearWiseZone(activeTab, getmonthyear);
@@ -361,26 +366,29 @@ function Targetsales(props) {
 
 
     const TargetSalesMonthYearWise = async (activeTab, getmonthyearss) => {
+  
 
         try {
+                setLoading(false)
             let URL = "http://10.14.84.54/Customeranalytics_API/api/TargetSales/";
 
             // console.log("URLactiveTab",activeTab)
 
             if (activeTab == "pp") {
                 URL = URL + "TargetSalesMonthYearWisePP";
-                console.log("URL 1", URL)
+               
             }
             else if (activeTab == "pe") {
                 URL = URL + "TargetSalesMonthYearWisePE";
-                console.log("URL 2", URL)
+         
             }
             else {
                 URL = URL + "TargetSalesMonthYearWise";
-                console.log("URL 3", URL)
+              
+           
             }
             let today = new Date();
-
+        
             // current month ka ek din pehle
             let currentMonthLastDay = new Date(
                 today.getFullYear(),
@@ -411,19 +419,19 @@ function Targetsales(props) {
 
 
 
-            let res = JSON.stringify({
-                monthYear: `${selectedMonth}-${selectedYear}`,
-                firstDay: `${selectedYear}-${selectedMonth}-01`,
-                lastDay: Calculatecurrectdaymonthyear === 0
-                    ? getLastDayOfMonth(selectedYear, selectedMonth)
-                    : getLastDayOfMonth2(selectedYear, selectedMonth),
-                  });
+            // let res = JSON.stringify({
+            //     monthYear: `${selectedMonth}-${selectedYear}`,
+            //     firstDay: `${selectedYear}-${selectedMonth}-01`,
+            //     lastDay: Calculatecurrectdaymonthyear === 0
+            //         ? getLastDayOfMonth(selectedYear, selectedMonth)
+            //         : getLastDayOfMonth2(selectedYear, selectedMonth),
+            //       });
 
-            console.log("currentMonthLastDay", res);
+            // console.log("currentMonthLastDayddd", res,selectedYear, selectedMonth);
 
 
 
-            console.log("FirstDay", getFirstDayOfMonth(selectedYear, selectedMonth))
+            // console.log("FirstDay", getFirstDayOfMonth(selectedYear, selectedMonth))
 
 
             //  let lstdate = getLastDayOfMonth(selectedYear,selectedMonth);
@@ -458,11 +466,17 @@ function Targetsales(props) {
                     }),
                 }
             );
+            setLoading(true)
+            console.log("currentMonthLastDayddd", selectedYear, selectedMonth);
+            // setSelectedMonth("")
+            // setSelectedYear("")
+            // setmonthyear("")
             if (!response.ok) {
                 throw new Error("API request failed");
             }
             const result = await response.json();
             // console.log("result", result)
+              console.log("currentMonthLastDayddd 1", result);
             console.log("TargetSalesMonthYearWise sddd", result.totalsales, result.totaltarget,);
             setTargetSalesMonthYear(result);
             console.log("TargetSalesMonthYearWise result", result);
@@ -507,18 +521,19 @@ function Targetsales(props) {
             }
 
 
-            let res = JSON.stringify({
-                monthYear: (selectedMonth + "-" + selectedYear),
-                firstDay: `${selectedYear}-${selectedMonth}-01`,
-                lastDay: Calculatecurrectdaymonthyear === 0
-                    ? getLastDayOfMonth(selectedYear, selectedMonth)
-                    : getLastDayOfMonth2(selectedYear, selectedMonth),
+            // let res = JSON.stringify({
+            //     monthYear: (selectedMonth + "-" + selectedYear),
+            //     firstDay: `${selectedYear}-${selectedMonth}-01`,
+            //     lastDay: Calculatecurrectdaymonthyear === 0
+            //         ? getLastDayOfMonth(selectedYear, selectedMonth)
+            //         : getLastDayOfMonth2(selectedYear, selectedMonth),
 
 
-            })
+            // })
+    
 
-            console.log("requestparam", res);
-
+            // console.log("requestparam", res);
+  console.log("result SDDD 1" ,selectedMonth,selectedYear)
             const response = await fetch(
                 URL,
                 {
@@ -543,7 +558,7 @@ function Targetsales(props) {
                 throw new Error("API request failed");
             }
             const result = await response.json();
-            console.log("result" + activeTab, result)
+            console.log("result SDDD" ,selectedMonth,selectedYear, result)
             console.log("TotalTargetSalesMonthYearWiseZone", result);
 
             //setZonewiseTotal(result);
@@ -722,11 +737,13 @@ function Targetsales(props) {
         <div className="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
             {/* <Toaster richColors position="top-right" /> */}
             <Header />
+            {loading? 
             <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
                 {/* Header */}
 
 
                 {/* Month and Year Selectors */}
+                
                 <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
                     <div className="flex flex-wrap items-end gap-6">
                         <div className="flex items-center gap-2 pb-2"><Calendar className="w-5 h-5 text-blue-600" /><h3 className="text-lg font-semibold text-gray-900 whitespace-nowrap">Select Period</h3></div>
@@ -1019,8 +1036,40 @@ function Targetsales(props) {
                 {/* Footer */}
 
             </div>
+             :<div style={styles.container}>
+              <div style={styles.loaderBox}>
+                <RingLoader size={100} color="#3498db" loading={!loading} />
+                <p style={styles.text}>Loading Data...</p>
+              </div>
+            </div>}
             <Footer />
         </div>
     );
+    
 }
+const styles = {
+  container: {
+    // position: "fixed",
+    // top: 0,
+    // left: 0,
+    width: "100%",
+    height: "80vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "rgba(255,255,255,0.7)", // optional
+    // zIndex: 9999,
+  },
+  loaderBox: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+  },
+  text: {
+    fontSize: "16px",
+    fontWeight: "500",
+    color: "#333",
+  },
+};
 export default withSessionContext(Targetsales)

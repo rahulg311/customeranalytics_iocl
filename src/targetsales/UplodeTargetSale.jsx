@@ -39,6 +39,7 @@ import withSessionContext from "../HOC/withSessionContext";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import OverallSectorReportTable from "./OverallSectorReportTable";
+import SelectBox from "../components/SelectBox";
 // Import all necessary types
 
 // Import all custom components
@@ -53,23 +54,16 @@ function UplodeTargetSale(props) {
   const [duplicateGrades, setDuplicateGrades] = useState(new Set());
   const [invalidValueRows, setInvalidValueRows] = useState(new Set());
 
-  const availableMonths = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const months = [
+        { id: 1, label: "January" }, { id: 2, label: "February" },
+        { id: 3, label: "March" }, { id: 4, label: "April" }, { id: 5, label: "May" },
+        { id: 6, label: "June" }, { id: 7, label: "July" }, { id: 8, label: "August" },
+        { id: 9, label: "September" }, { id: 10, label: "October" },
+        { id: 11, label: "November" }, { id: 12, label: "December" },
+    ];
 
   const [activeTab, setActiveTab] = useState("overview");
-  
+  const [selectedMonth, setSelectedMonth] = useState();
 
   // Validate Excel Data
   const validateExcelData = (data, headers) => {
@@ -110,6 +104,10 @@ function UplodeTargetSale(props) {
 
   // Excel Upload Handlers
   const handleFileUpload = (e) => {
+    if(!selectedMonth){
+      toast.warning("Please select a month");
+      return;
+    }
     const file = e.target.files[0];
     if (!file) return;
 
@@ -157,6 +155,15 @@ function UplodeTargetSale(props) {
     };
     reader.readAsBinaryString(file);
   };
+
+  const handleDownLoadTemplate = () => {
+    const link = document.createElement('a');
+    link.href='/Month_Target.xlsx';
+    link.download = 'Month_Target.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);    
+  }
 
   const handleClearUpload = () => {
     setUploadedExcelData([]);
@@ -239,26 +246,41 @@ function UplodeTargetSale(props) {
 
         {/* Month and Year Selectors */}
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-          <div className="flex flex-wrap items-end gap-6">
-            <div className="flex flex-wrap gap-4">
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept=".xlsx,.xls,.csv"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="excel-upload-direct"
-              />
-              <label
-                htmlFor="excel-upload-direct"
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium cursor-pointer transition-all ${activeTab === "uploadExcel" ? "bg-blue-600 text-white shadow-lg" : "bg-green-600 text-white hover:bg-green-700"}`}
-              >
-                <Upload className="w-5 h-5" />
-                {isUploading ? "Uploading..." : "Upload Target Sales"}
-              </label>
-            </div>
-          </div>
-        </div>
+  <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+    <div className="flex flex-wrap items-end gap-4">
+      <div className="w-72">
+        <SelectBox label="Select Month" value={selectedMonth} onChange={setSelectedMonth} options={months} />
+      </div>
+      <div className="pb-1">
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept=".xlsx,.xls"
+          onChange={handleFileUpload}
+          className="hidden"
+          id="excel-upload-direct"
+        />
+        <label
+          htmlFor="excel-upload-direct"
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium cursor-pointer transition-all ${
+            activeTab === "uploadExcel" ? "bg-blue-600 text-white shadow-md" : "bg-green-600 text-white hover:bg-green-700"
+          }`}>
+          <Upload className="w-4 h-4" />
+          {isUploading ? "Uploading..." : "Upload Excel"}
+        </label>
+      </div>
+    </div>
+    <div>
+      <button
+        className="flex items-center gap-2 px-5 py-2.5 font-semibold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-sm"
+        onClick={handleDownLoadTemplate}>
+        <FileSpreadsheet size={18} />
+        Download Template
+      </button>
+    </div>
+
+  </div>
+</div>
 
         {/* Conditional Content Area */}
         {activeTab === "uploadExcel" ? (
@@ -390,6 +412,7 @@ function UplodeTargetSale(props) {
         {/* Footer */}
       </div>
       <Footer />
+       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

@@ -17,7 +17,7 @@ import {
   Send,
   Table,
   UserX,
-
+  MailPlus,
   MailCheck,
   Clock
 } from 'lucide-react';
@@ -94,7 +94,8 @@ const NavigationCard = ({
    
   return (
     <div
-      className={`rounded-2xl p-6 text-white shadow-lg `}
+      className="rounded-2xl p-6 text-white shadow-lg  transition hover:shadow-lg"
+      
       onClick={!comingSoon && !subLinks ? onClick : undefined}
       
     >
@@ -152,30 +153,36 @@ const NavigationCard = ({
     {
       id: 'customer-analysis',
      // path: '/dashboard',
-      title: 'Customer Analytics',
-      description: 'Analytics for Petrochem ZPC, Inactive Customers etc.',
+      title: 'APP Dashboard',
+      // description: 'Analytics for Petrochem ZPC, Inactive Customers etc.',
       icon: <Users className="w-7 h-7" />,
       theme: { gradientFrom: 'from-teal-500', gradientTo: 'to-green-600', shadowColor: 'shadow-green-500/30' },
       subLinks: [
         {
-          title: 'Zero Product Customers',
+          title: 'APP Performance ',
           description: 'Customers Registered. No engagement yet.',
-         path: '/AppPerformance',
+          path: '/AppPerformance',
           icon: <UserX className="w-4 h-4" />
         },
         {
-          title: 'Inactive Customers',
-          description: 'Registered Customers with No recent purchases.',
-         // path: '/dashboard',
-          // CORRECTED: The icon is 'UserClock', not 'Clock'
-          icon: <Clock className="w-4 h-4" /> 
+          title: 'APP Performance Dashboard ',
+          description: 'APP Qty vs Sales',
+          path: '/CustomerAPP',
+          icon: <MailPlus className="w-4 h-4" />
         },
-        {
-          title: 'Auto-Mailer for Field Officers',
-          description: 'Auto mailer to FOs for customer engagement.',
-         // path: '/dashboard',
-          icon: <MailCheck className="w-4 h-4" />
-        }
+        // {
+        //   title: 'Inactive Customers',
+        //   description: 'Registered Customers with No recent purchases.',
+        //  // path: '/dashboard',
+        //   // CORRECTED: The icon is 'UserClock', not 'Clock'
+        //   icon: <Clock className="w-4 h-4" /> 
+        // },
+        // {
+        //   title: 'Auto-Mailer for Field Officers',
+        //   description: 'Auto mailer to FOs for customer engagement.',
+        //  // path: '/dashboard',
+        //   icon: <MailCheck className="w-4 h-4" />
+        // }
       ]
     }
   ];

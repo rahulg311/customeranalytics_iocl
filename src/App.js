@@ -12,6 +12,7 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import SectorReport from './targetsales/SectorReport.jsx';
 import UplodeTargetSale from './targetsales/UplodeTargetSale.jsx';
 import AppPerformance from './targetsales/AppPerformance.jsx';
+import CustomerAPPsignedvsSales from './targetsales/CustomerAPPsignedvsSales.jsx';
 
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
@@ -37,7 +38,7 @@ function App() {
   }, []);
   return (
     <SessionProvider>
-      <BrowserRouter>
+       <BrowserRouter basename={"/customeranalytics"}>
       <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -45,6 +46,8 @@ function App() {
       <Route path="/SectorReport" element={<ProtectedRoute><SectorReport /></ProtectedRoute>} />
       <Route path="/UplodeTargetSales" element={<ProtectedRoute><UplodeTargetSale /></ProtectedRoute>} />
        <Route path="/AppPerformance" element={<ProtectedRoute><AppPerformance /></ProtectedRoute>} />
+       {/* <Route path="/CustomerAPP" element={<ProtectedRoute><CustomerAPPsignedvsSales /></ProtectedRoute>} /> */}
+       <Route path="/CustomerAPP" element={<CustomerAPPsignedvsSales />} />
 
         
     </Routes>

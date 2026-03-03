@@ -10,7 +10,7 @@ function Header(props) {
  let UserNamelogin = props.sessionContext?.logininPlantData?.userName ?? []
 
 
-
+ let headerName = props.headerName ?? 'Petrochemical Sales Analytics'
 
    const [open, setOpen] = useState(false);
 
@@ -39,7 +39,7 @@ useEffect(() => {
 }, [open]);
 
 
-  console.log("zonedata",zonedata)
+  // console.log("zonedata",zonedata)
 
     const signout = () => {
     sessionStorage.clear();
@@ -60,14 +60,14 @@ const usenavigate = useNavigate();
     usenavigate("/", { replace: true }); // redirect login
   };
   return (
-      <header className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between rounded-xl px-4 md:p-6 bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900 shadow-md">
-          <a href="/home" className="flex-shrink-0">
+      <header className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between rounded-xl px-4 md:p-6 bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 dark:from-[#acadb1] dark:via-[#e8e7f3] dark:to-[#d6c6e3] shadow-md">
+          <a href="/dashboard" className="flex-shrink-0">
             <img src={ic_logo} alt="IOCL Logo" width={56} height={56} className="h-12 w-auto md:h-14" />
           </a>
           <div className="text-center">
              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
                 <span className="bg-gradient-to-r from-blue-700 via-cyan-700 to-green-900 bg-clip-text text-transparent">
-                  Petrochemical Sales Analytics
+                  {headerName}
                 </span>
             </h1>
           </div>
